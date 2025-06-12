@@ -1,0 +1,4 @@
+streamlit
+cohere
+gspread
+google-auth-oauthlib
