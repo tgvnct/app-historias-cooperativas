@@ -4,12 +4,17 @@ import cohere, random, re, os
 import gspread
 from google.oauth2.service_account import Credentials
 
-# --- CSS PERSONALIZADO (VERSÃO MAIS ESPECÍFICA) ---
+# --- CSS PERSONALIZADO (VERSÃO FINAL) ---
 st.markdown("""
 <style>
-/* Este seletor é mais específico e tem mais prioridade */
+/* 1. Regra para o contêiner que provavelmente tem o fundo cinza */
+.stTextArea div[data-baseweb="base-input"] {
+    background-color: transparent !important;
+}
+
+/* 2. Regra para o campo de texto em si (para garantir a transparência e cor do texto/borda) */
 .stTextArea textarea[disabled] {
-    background: transparent !important;
+    background-color: transparent !important;
     color: #000000 !important;
     border: 1px solid #cccccc !important;
 }
