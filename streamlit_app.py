@@ -4,33 +4,6 @@ import cohere, random, re, os
 import gspread
 from google.oauth2.service_account import Credentials
 
-# --- CSS PERSONALIZADO (versão final) ---------------------------------------
-st.markdown(
-    """
-    <style>
-    /* Regra 1: contêiner */
-    div[data-baseweb="textarea"] {
-        background-color: #f2f2f2 !important;   /* cinza claro */
-        border: 1px solid #cccccc !important;   /* borda igual à do textarea */
-    }
-
-    /* Regra 2: área de texto interna */
-    .stTextArea textarea[disabled] {
-        background-color: transparent !important;
-        color: #000000 !important;
-        border: none !important;                /* já herdamos a borda do contêiner */
-        user-select: none !important;
-        -webkit-user-select: none !important;
-        -moz-user-select: none !important;
-        -ms-user-select: none !important;
-        pointer-events: none !important;        /* bloqueia cliques */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-
 # --- CONSTANTES E CONFIGURAÇÕES ------------------------------------
 AUTORES = [
     "Machado de Assis",
