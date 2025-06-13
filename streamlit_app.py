@@ -25,7 +25,7 @@ def connect_to_gsheet():
         creds_dict = st.secrets["gcp_service_account"]
         creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
         client = gspread.authorize(creds)
-        spreadsheet = client.open("Desfechos das Histórias") # CONFIRA O NOME DA PLANILHA
+        spreadsheet = client.open("Desfechos - Histórias") # CONFIRA O NOME DA PLANILHA
         worksheet = spreadsheet.worksheet("Página1") # CONFIRA O NOME DA ABA
         return worksheet
     except Exception as e:
