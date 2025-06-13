@@ -25,8 +25,8 @@ def connect_to_gsheet():
         creds_dict = st.secrets["gcp_service_account"]
         creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
         client = gspread.authorize(creds)
-        spreadsheet = client.open("Desfechos das Histórias") # CONFIRA SE ESTE NOME ESTÁ CORRETO
-        worksheet = spreadsheet.worksheet("Página1") # CONFIRA SE O NOME DA ABA ESTÁ CORRETO
+        spreadsheet = client.open("Desfechos - Histórias") # Aqui deve ir o nome da planilha
+        worksheet = spreadsheet.worksheet("Página1") # Ver se o nome da aba está correto e se quiser fazer por turma é só mudar o nome da aba.
         return worksheet
     except Exception as e:
         st.error(f"Erro ao conectar com o Google Sheets: {e}")
