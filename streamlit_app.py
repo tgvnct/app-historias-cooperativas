@@ -15,8 +15,7 @@ AUTORES = [
     "Jorge Amado",
     "Rachel de Queiroz",
     "Lygia Fagundes Telles",
-    "Itamar Vieira Junior",
-    "João Simoes Lopes Neto", 
+    "Itamar Vieira Junior",    
 ]
 
 # --- FUNÇÕES (COHERE E GOOGLE SHEETS) ---
