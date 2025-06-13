@@ -16,6 +16,7 @@ AUTORES = [
     "Jorge Amado",
     "Rachel de Queiroz",
     "Lygia Fagundes Telles",
+    "Iramar Vieira Junior",
 ]
 
 # --- FUNÇÕES (COHERE E GOOGLE SHEETS) --------------------------------
