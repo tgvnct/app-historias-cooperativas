@@ -22,7 +22,7 @@ def connect_to_gsheet():
         client = gspread.authorize(creds)
 
         # ABRA A PLANILHA PELO NOME QUE VOCÊ DEU A ELA
-        spreadsheet = client.open("Nome da Sua Planilha Aqui") # <-- MUDE AQUI O NOME DA SUA PLANILHA
+        spreadsheet = client.open("Desfechos - Histórias") # <-- MUDE AQUI O NOME DA SUA PLANILHA
         worksheet = spreadsheet.worksheet("Página1") # OU O NOME DA ABA
         return worksheet
     except Exception as e:
