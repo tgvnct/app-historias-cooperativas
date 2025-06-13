@@ -9,7 +9,7 @@ st.markdown("""
 <style>
 /* Regra 1: Alvo exato do contêiner com fundo cinza, identificado na sua imagem */
 div[data-baseweb="textarea"] {
-    background-color: transparent !important;
+    background-color: blue !important;
 }
 
 /* Regra 2: Estilo da área de texto interna (cor, borda, bloqueio de seleção) */
