@@ -4,34 +4,34 @@ import cohere, random, re, os
 import gspread
 from google.oauth2.service_account import Credentials
 
-# --- CSS PERSONALIZADO (VERSÃO DEFINITIVA BASEADA NA SUA IMAGEM) ---
+# --- CSS PERSONALIZADO (VERSÃO FINAL E CORRETA) ---
 st.markdown("""
 <style>
-/* Regra 1: Torna o 'contêiner' do campo de texto transparente. */
-/* Usamos o seletor exato que vimos na sua imagem. */
-div[data-baseweb="base-input"] {
+/* Regra 1: Alvo exato do contêiner com fundo cinza, identificado na sua imagem */
+div[data-baseweb="textarea"] {
     background-color: transparent !important;
 }
 
-/* Regra 2: Estiliza a área de texto em si e bloqueia a seleção. */
+/* Regra 2: Estilo da área de texto interna (cor, borda, bloqueio de seleção) */
 .stTextArea textarea[disabled] {
-    /* Deixa o fundo da própria área de texto transparente */
+    /* Garante que a área interna também seja transparente para vermos o fundo do contêiner */
     background-color: transparent !important;
-
+    
     /* Define a cor do texto como preta */
     color: #000000 !important;
-
+    
     /* Define a borda cinza claro simples */
     border: 1px solid #cccccc !important;
-
+    
     /* Impede que o usuário selecione o texto gerado pela IA */
     user-select: none !important;
-    -webkit-user-select: none !important; /* Para navegadores como Safari */
-    -moz-user-select: none !important; /* Para Firefox */
-    -ms-user-select: none !important; /* Para Internet Explorer/Edge */
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
 }
 </style>
 """, unsafe_allow_html=True)
+
 # --- CONSTANTES E CONFIGURAÇÕES ------------------------------------
 AUTORES = [
     "Machado de Assis",
