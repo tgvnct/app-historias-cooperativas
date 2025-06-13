@@ -1,4 +1,4 @@
-# streamlit_app.py - VERSÃO COMPLETA E CORRIGIDA
+# streamlit_app.py - VERSÃO FINAL E LIMPA
 
 import streamlit as st
 import cohere
@@ -9,28 +9,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from textwrap import dedent
 
-# O código CSS está aqui, comentado. Se quiser tentar novamente no futuro, basta remover os '/*' e '*/'.
-/*
-st.markdown(\"""
-<style>
-div[data-baseweb="textarea"] {
-    background-color: transparent !important;
-}
-.stTextArea textarea[disabled] {
-    background-color: transparent !important;
-    color: #000000 !important;
-    border: 1px solid #cccccc !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-}
-</style>
-\""", unsafe_allow_html=True)
-*/
-
-
-# --- CONSTANTES E CONFIGURAÇÕES ---
+# --- CONSTANTES ---
 AUTORES = [
     "Machado de Assis",
     "Guimarães Rosa",
@@ -75,10 +54,10 @@ def gerar_historia(autor: str) -> str:
     texto = re.sub(r'Parágrafo\s*\d+\s*:\s*', '', texto, flags=re.I)
     return texto
 
-# --- INTERFACE STREAMLIT ---
+# --- INTERFACE E LÓGICA PRINCIPAL ---
 st.title("✍️ Histórias cooperativas")
 
-# --- GERENCIAMENTO DE ESTADO DA SESSÃO ---
+# Inicializa as variáveis de estado da sessão
 if 'historia_gerada' not in st.session_state:
     st.session_state.historia_gerada = ""
 if 'autor_selecionado' not in st.session_state:
@@ -88,8 +67,7 @@ if 'desfecho_usuario' not in st.session_state:
 if 'envio_concluido' not in st.session_state:
     st.session_state.envio_concluido = False
 
-
-# --- LÓGICA DE EXIBIÇÃO DA INTERFACE ---
+# Lógica de exibição da interface
 if not st.session_state.envio_concluido:
     st.write("Escreva junto com autores clássicos do Brasil")
     autor = st.selectbox("Escolha o autor:", AUTORES)
@@ -123,12 +101,10 @@ if not st.session_state.envio_concluido:
                         st.rerun()
             else:
                 st.warning("Por favor, preencha seu nome e o desfecho antes de enviar.")
-
 else:
     st.success("Sua história foi enviada e salva com sucesso!")
     st.header("Confira a história completa:")
 
-    # Monta o texto completo
     texto_completo = f"""
         {st.session_state.historia_gerada}
 
@@ -136,15 +112,12 @@ else:
 
         **{st.session_state.desfecho_usuario}**
     """
-
-    # Usa dedent para remover a indentação antes de exibir
+    
     st.markdown(dedent(texto_completo))
     
     st.divider()
 
-    # Botão para resetar e escrever uma nova história
     if st.button("Escrever outra história"):
-        # Limpa todas as variáveis de estado para recomeçar
         st.session_state.historia_gerada = ""
         st.session_state.autor_selecionado = ""
         st.session_state.desfecho_usuario = ""
