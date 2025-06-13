@@ -89,6 +89,6 @@ if st.session_state.historia_gerada:
                     worksheet.append_row(nova_linha)
                     st.success("Desfecho enviado!")
                     st.session_state.historia_gerada = ""
-                    st.experimental_rerun()
+                    st.rerun()
         else:
             st.warning("Por favor, preencha seu nome e o desfecho antes de enviar.")
