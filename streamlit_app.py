@@ -1,4 +1,4 @@
-# streamlit_app.py - VERSÃO FINAL E LIMPA
+# streamlit_app.py - VERSÃO FINAL DEFINITIVA
 
 import streamlit as st
 import cohere
@@ -7,7 +7,6 @@ import re
 import os
 import gspread
 from google.oauth2.service_account import Credentials
-from textwrap import dedent
 
 # --- CONSTANTES ---
 AUTORES = [
@@ -25,7 +24,7 @@ def connect_to_gsheet():
         creds_dict = st.secrets["gcp_service_account"]
         creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
         client = gspread.authorize(creds)
-        spreadsheet = client.open("Desfechos - Histórias") # CONFIRA O NOME DA PLANILHA
+        spreadsheet = client.open("Desfechos das Histórias") # CONFIRA O NOME DA PLANILHA
         worksheet = spreadsheet.worksheet("Página1") # CONFIRA O NOME DA ABA
         return worksheet
     except Exception as e:
@@ -105,13 +104,14 @@ else:
     st.success("Sua história foi enviada e salva com sucesso!")
     st.header("Confira a história completa:")
 
-    texto_completo = f"""
-       st.session_state.historia_gerada + 
-    "\n\n*Seu desfecho:*\n\n" + 
-    f"**{st.session_state.desfecho_usuario}**"
-)
+    # Constrói o texto final usando concatenação para evitar erros de indentação
+    texto_final = (
+        st.session_state.historia_gerada + 
+        "\n\n*Seu desfecho:*\n\n" + 
+        f"**{st.session_state.desfecho_usuario}**"
+    )
     
-    st.markdown(dedent(texto_completo))
+    st.markdown(texto_final)
     
     st.divider()
 
