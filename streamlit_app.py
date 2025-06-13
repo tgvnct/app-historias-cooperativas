@@ -114,23 +114,25 @@ if not st.session_state.envio_concluido:
 
 # MUDANÇA: Se o envio foi concluído, mostra a tela de sucesso com a história completa
 else:
-    st.success("Sua história foi enviada e salva com sucesso!")
+st.success("Sua história foi enviada e salva com sucesso!")
     st.header("Confira a história completa:")
 
-    # Junta as duas partes da história
-    historia_completa = f"{st.session_state.historia_gerada}\n\n{st.session_state.desfecho_usuario}"
-    
-    st.markdown(f"""
-    {st.session_state.historia_gerada}
+    # Primeiro, montamos o texto completo
     texto_completo = f"""
-    *Seu desfecho:*
-    
-    **{st.session_state.desfecho_usuario}**
-    """)
+        {st.session_state.historia_gerada}
+
+        *Seu desfecho:*
+
+        **{st.session_state.desfecho_usuario}**
+    """
+
+    # Em seguida, usamos dedent para remover a indentação antes de mostrar na tela
+    # (Não se esqueça de ter 'from textwrap import dedent' no topo do arquivo)
+    st.markdown(dedent(texto_completo))
     
     st.divider()
 
-    # MUDANÇA: Botão para resetar e escrever uma nova história
+    # Botão para resetar e escrever uma nova história
     if st.button("Escrever outra história"):
         # Limpa todas as variáveis de estado para recomeçar
         st.session_state.historia_gerada = ""
