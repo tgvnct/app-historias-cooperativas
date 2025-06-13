@@ -59,7 +59,7 @@ def gerar_historia(autor: str) -> str:
 
 # --- INTERFACE STREAMLIT ------------------------------------------
 st.title("✍️ Histórias cooperativas – escreva junto com autores clássicos do Brasil")
-
+st.write("Segredos carregados:", st.secrets.to_dict()) 
 if 'historia_gerada' not in st.session_state:
     st.session_state.historia_gerada = ""
 
