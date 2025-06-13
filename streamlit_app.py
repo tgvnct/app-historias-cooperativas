@@ -8,13 +8,15 @@ import os
 import gspread
 from google.oauth2.service_account import Credentials
 
-# --- CONSTANTES ---
+# --- CONSTANTES ---aqui podemos acrescentar ou modificar os autores
 AUTORES = [
     "Machado de Assis",
     "Guimarães Rosa",
     "Jorge Amado",
     "Rachel de Queiroz",
     "Lygia Fagundes Telles",
+    "Itamar Vieira Junior",
+    "João Simoes Lopes Neto", 
 ]
 
 # --- FUNÇÕES (COHERE E GOOGLE SHEETS) ---
@@ -54,7 +56,7 @@ def gerar_historia(autor: str) -> str:
     return texto
 
 # --- INTERFACE E LÓGICA PRINCIPAL ---
-st.title("✍️ Histórias cooperativas")
+st.title("✍️ Histórias cooperativas - escreva junto com grandes autores brasileiros")
 
 # Inicializa as variáveis de estado da sessão
 if 'historia_gerada' not in st.session_state:
