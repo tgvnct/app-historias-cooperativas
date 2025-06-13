@@ -3,6 +3,7 @@ import streamlit as st
 import cohere, random, re, os
 import gspread
 from google.oauth2.service_account import Credentials
+from textwrap import dedent
 
 # Deixamos o código CSS aqui, comentado por enquanto.
 # --- CSS PERSONALIZADO ---
@@ -121,7 +122,7 @@ else:
     
     st.markdown(f"""
     {st.session_state.historia_gerada}
-    
+    texto_completo = f"""
     *Seu desfecho:*
     
     **{st.session_state.desfecho_usuario}**
