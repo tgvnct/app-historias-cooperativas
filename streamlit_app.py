@@ -1,44 +1,60 @@
-# streamlit_app.py
+# streamlit_app.py - VERSÃO COMPLETA E CORRIGIDA
+
 import streamlit as st
-import cohere, random, re, os
+import cohere
+import random
+import re
+import os
 import gspread
 from google.oauth2.service_account import Credentials
 from textwrap import dedent
 
-# Deixamos o código CSS aqui, comentado por enquanto.
-# --- CSS PERSONALIZADO ---
-# st.markdown("""...""", unsafe_allow_html=True)
+# O código CSS está aqui, comentado. Se quiser tentar novamente no futuro, basta remover os '/*' e '*/'.
+/*
+st.markdown(\"""
+<style>
+div[data-baseweb="textarea"] {
+    background-color: transparent !important;
+}
+.stTextArea textarea[disabled] {
+    background-color: transparent !important;
+    color: #000000 !important;
+    border: 1px solid #cccccc !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+}
+</style>
+\""", unsafe_allow_html=True)
+*/
 
 
-# --- CONSTANTES E CONFIGURAÇÕES ------------------------------------
+# --- CONSTANTES E CONFIGURAÇÕES ---
 AUTORES = [
     "Machado de Assis",
     "Guimarães Rosa",
     "Jorge Amado",
     "Rachel de Queiroz",
     "Lygia Fagundes Telles",
-    "Itamar Vieira Junior",
-    "Fulano da Silva",
-
 ]
 
-# --- FUNÇÕES (COHERE E GOOGLE SHEETS) --------------------------------
+# --- FUNÇÕES (COHERE E GOOGLE SHEETS) ---
 def connect_to_gsheet():
     try:
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
         creds_dict = st.secrets["gcp_service_account"]
         creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
         client = gspread.authorize(creds)
-        spreadsheet = client.open("Desfechos - Histórias") # Aqui deve ir o nome da planilha
-        worksheet = spreadsheet.worksheet("Página1") # Ver se o nome da aba está correto e se quiser fazer por turma é só mudar o nome da aba.
+        spreadsheet = client.open("Desfechos das Histórias") # CONFIRA O NOME DA PLANILHA
+        worksheet = spreadsheet.worksheet("Página1") # CONFIRA O NOME DA ABA
         return worksheet
     except Exception as e:
         st.error(f"Erro ao conectar com o Google Sheets: {e}")
         return None
 
-API_KEY = st.secrets.get("COHERE_API_KEY")
-if API_KEY:
-    co = cohere.Client(API_KEY)
+if "COHERE_API_KEY" in st.secrets:
+    co = cohere.Client(st.secrets["COHERE_API_KEY"])
 else:
     st.error("⚠️ Configure COHERE_API_KEY nos Secrets do Streamlit.")
     st.stop()
@@ -59,11 +75,10 @@ def gerar_historia(autor: str) -> str:
     texto = re.sub(r'Parágrafo\s*\d+\s*:\s*', '', texto, flags=re.I)
     return texto
 
-# --- INTERFACE STREAMLIT ------------------------------------------
-st.title("✍️ Histórias cooperativas, escreva junto com grandes nomes da literatura brasileira")
+# --- INTERFACE STREAMLIT ---
+st.title("✍️ Histórias cooperativas")
 
 # --- GERENCIAMENTO DE ESTADO DA SESSÃO ---
-# MUDANÇA: Adicionamos mais variáveis para controlar o fluxo
 if 'historia_gerada' not in st.session_state:
     st.session_state.historia_gerada = ""
 if 'autor_selecionado' not in st.session_state:
@@ -74,8 +89,7 @@ if 'envio_concluido' not in st.session_state:
     st.session_state.envio_concluido = False
 
 
-# MUDANÇA: A interface agora é condicional
-# Se o envio ainda não foi concluído, mostra a interface normal
+# --- LÓGICA DE EXIBIÇÃO DA INTERFACE ---
 if not st.session_state.envio_concluido:
     st.write("Escreva junto com autores clássicos do Brasil")
     autor = st.selectbox("Escolha o autor:", AUTORES)
@@ -101,23 +115,20 @@ if not st.session_state.envio_concluido:
                 with st.spinner("Enviando seu desfecho..."):
                     worksheet = connect_to_gsheet()
                     if worksheet:
-                        # MUDANÇA: Adicionamos o autor na linha a ser gravada
                         nova_linha = [st.session_state.autor_selecionado, nome_usuario, st.session_state.historia_gerada, desfecho]
                         worksheet.append_row(nova_linha)
                         
-                        # MUDANÇA: Guardamos o desfecho e mudamos o estado para "concluído"
                         st.session_state.desfecho_usuario = desfecho
                         st.session_state.envio_concluido = True
-                        st.rerun() # Força o recarregamento para mostrar a nova tela
+                        st.rerun()
             else:
                 st.warning("Por favor, preencha seu nome e o desfecho antes de enviar.")
 
-# MUDANÇA: Se o envio foi concluído, mostra a tela de sucesso com a história completa
 else:
-st.success("Sua história foi enviada e salva com sucesso!")
+    st.success("Sua história foi enviada e salva com sucesso!")
     st.header("Confira a história completa:")
 
-    # Primeiro, montamos o texto completo
+    # Monta o texto completo
     texto_completo = f"""
         {st.session_state.historia_gerada}
 
@@ -126,8 +137,7 @@ st.success("Sua história foi enviada e salva com sucesso!")
         **{st.session_state.desfecho_usuario}**
     """
 
-    # Em seguida, usamos dedent para remover a indentação antes de mostrar na tela
-    # (Não se esqueça de ter 'from textwrap import dedent' no topo do arquivo)
+    # Usa dedent para remover a indentação antes de exibir
     st.markdown(dedent(texto_completo))
     
     st.divider()
