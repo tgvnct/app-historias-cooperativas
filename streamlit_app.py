@@ -4,14 +4,14 @@ import cohere, random, re, os
 import gspread
 from google.oauth2.service_account import Credentials
 
-# --- CSS PERSONALIZADO PARA A ÁREA DE TEXTO DA IA ---
+# --- CSS PERSONALIZADO (VERSÃO MAIS ESPECÍFICA) ---
 st.markdown("""
 <style>
-/* Seleciona a área de texto que está desabilitada (onde a IA escreve) */
-textarea[disabled] {
-    background-color: transparent !important;
-    color: #000000 !important; /* Define a cor do texto como preta */
-    border: 1px solid #cccccc !important; /* Define uma borda cinza claro simples */
+/* Este seletor é mais específico e tem mais prioridade */
+.stTextArea textarea[disabled] {
+    background: transparent !important;
+    color: #000000 !important;
+    border: 1px solid #cccccc !important;
 }
 </style>
 """, unsafe_allow_html=True)
