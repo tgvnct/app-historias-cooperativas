@@ -16,7 +16,7 @@ AUTORES = [
     "Jorge Amado",
     "Rachel de Queiroz",
     "Lygia Fagundes Telles",
-    "Iramar Vieira Junior",
+    "Itamar Vieira Junior",
 ]
 
 # --- FUNÇÕES (COHERE E GOOGLE SHEETS) --------------------------------
@@ -87,6 +87,7 @@ if not st.session_state.envio_concluido:
                 st.session_state.historia_gerada = ""
 
     if st.session_state.historia_gerada:
+        st.text_area(label=f"Início da história por: {st.session_state.autor_selecionado}", value=st.session_state.historia_gerada, height=250, disabled=True)
         st.divider()
         st.write("Agora é a sua vez! Continue a história.")
         nome_usuario = st.text_input("Seu nome:")
