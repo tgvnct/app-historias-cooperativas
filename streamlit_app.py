@@ -106,12 +106,10 @@ else:
     st.header("Confira a história completa:")
 
     texto_completo = f"""
-        {st.session_state.historia_gerada}
-
-        *Seu desfecho:*
-
-        **{st.session_state.desfecho_usuario}**
-    """
+       st.session_state.historia_gerada + 
+    "\n\n*Seu desfecho:*\n\n" + 
+    f"**{st.session_state.desfecho_usuario}**"
+)
     
     st.markdown(dedent(texto_completo))
     
