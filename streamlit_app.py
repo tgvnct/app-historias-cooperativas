@@ -9,26 +9,9 @@ st.markdown("""
 <style>
 /* Seleciona a área de texto que está desabilitada (onde a IA escreve) */
 textarea[disabled] {
-    /* Opção 1: Fundo com uma cor azul bem claro (cor de destaque) */
-    background-color: #e8f0fe !important;
-    color: #212529 !important; /* Cor do texto um pouco mais escura que o padrão */
-    border: 1px solid #B5C5E2; /* Uma borda sutil para combinar */
-
-    /* Para usar outras opções, comente a de cima e descomente uma das abaixo */
-
-    /* Opção 2: Fundo transparente com uma borda simples */
-    /*
     background-color: transparent !important;
-    border: 1px dashed #ccc;
-    color: #212529 !important;
-    */
-
-    /* Opção 3: Um tom de pergaminho/papel antigo */
-    /*
-    background-color: #fcf5e5 !important;
-    color: #5a4b2b !important;
-    border: 1px solid #e3d9c3;
-    */
+    color: #000000 !important; /* Define a cor do texto como preta */
+    border: 1px solid #cccccc !important; /* Define uma borda cinza claro simples */
 }
 </style>
 """, unsafe_allow_html=True)
