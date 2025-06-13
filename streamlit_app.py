@@ -4,6 +4,11 @@ import cohere, random, re, os
 import gspread
 from google.oauth2.service_account import Credentials
 
+# Deixamos o código CSS aqui, comentado por enquanto.
+# --- CSS PERSONALIZADO ---
+# st.markdown("""...""", unsafe_allow_html=True)
+
+
 # --- CONSTANTES E CONFIGURAÇÕES ------------------------------------
 AUTORES = [
     "Machado de Assis",
@@ -13,30 +18,27 @@ AUTORES = [
     "Lygia Fagundes Telles",
 ]
 
-# --- CONEXÃO COM GOOGLE SHEETS --------------------------------------
+# --- FUNÇÕES (COHERE E GOOGLE SHEETS) --------------------------------
 def connect_to_gsheet():
     try:
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
         creds_dict = st.secrets["gcp_service_account"]
         creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
         client = gspread.authorize(creds)
-
-        # ABRA A PLANILHA PELO NOME QUE VOCÊ DEU A ELA
-        spreadsheet = client.open("Desfechos - Histórias") # <-- MUDE AQUI O NOME DA SUA PLANILHA
-        worksheet = spreadsheet.worksheet("Página1") # OU O NOME DA ABA
+        spreadsheet = client.open("Desfechos das Histórias") # CONFIRA SE ESTE NOME ESTÁ CORRETO
+        worksheet = spreadsheet.worksheet("Página1") # CONFIRA SE O NOME DA ABA ESTÁ CORRETO
         return worksheet
     except Exception as e:
         st.error(f"Erro ao conectar com o Google Sheets: {e}")
         return None
 
-# --- LE CHAVE DA COHERE -------------------------------------------
 API_KEY = st.secrets.get("COHERE_API_KEY")
-if not API_KEY:
+if API_KEY:
+    co = cohere.Client(API_KEY)
+else:
     st.error("⚠️ Configure COHERE_API_KEY nos Secrets do Streamlit.")
     st.stop()
-co = cohere.Client(API_KEY)
 
-# --- FUNÇÃO QUE GERA A HISTÓRIA -----------------------------------
 def gerar_historia(autor: str) -> str:
     prompt = (
         f"Você é um autor brasileiro famoso chamado {autor}. "
@@ -45,11 +47,7 @@ def gerar_historia(autor: str) -> str:
         "Não adicione títulos nem numere os parágrafos."
     )
     rsp = co.chat(
-        model="command-r",
-        message=prompt,
-        temperature=1.0,
-        p=0.9,
-        k=50,
+        model="command-r", message=prompt, temperature=1.0, p=0.9, k=50,
         seed=random.randint(1, 2_000_000_000),
     )
     texto = rsp.text.strip()
@@ -58,37 +56,83 @@ def gerar_historia(autor: str) -> str:
     return texto
 
 # --- INTERFACE STREAMLIT ------------------------------------------
-st.title("✍️ Histórias cooperativas – escreva junto com autores clássicos do Brasil")
+st.title("✍️ Histórias cooperativas")
 
+# --- GERENCIAMENTO DE ESTADO DA SESSÃO ---
+# MUDANÇA: Adicionamos mais variáveis para controlar o fluxo
 if 'historia_gerada' not in st.session_state:
     st.session_state.historia_gerada = ""
+if 'autor_selecionado' not in st.session_state:
+    st.session_state.autor_selecionado = ""
+if 'desfecho_usuario' not in st.session_state:
+    st.session_state.desfecho_usuario = ""
+if 'envio_concluido' not in st.session_state:
+    st.session_state.envio_concluido = False
 
-autor = st.selectbox("Escolha o autor:", AUTORES)
 
-if st.button("Gerar história"):
-    with st.spinner("Gerando…"):
-        try:
-            st.session_state.historia_gerada = gerar_historia(autor)
-        except Exception as e:
-            st.error(f"Erro na API da Cohere: {e}")
-            st.session_state.historia_gerada = ""
+# MUDANÇA: A interface agora é condicional
+# Se o envio ainda não foi concluído, mostra a interface normal
+if not st.session_state.envio_concluido:
+    st.write("Escreva junto com autores clássicos do Brasil")
+    autor = st.selectbox("Escolha o autor:", AUTORES)
 
-if st.session_state.historia_gerada:
-    st.text_area("História gerada:", st.session_state.historia_gerada, height=250, key="historia_area", disabled=True)
+    if st.button("Gerar início da história"):
+        with st.spinner("Gerando…"):
+            try:
+                st.session_state.historia_gerada = gerar_historia(autor)
+                st.session_state.autor_selecionado = autor
+            except Exception as e:
+                st.error(f"Erro na API da Cohere: {e}")
+                st.session_state.historia_gerada = ""
+
+    if st.session_state.historia_gerada:
+        st.text_area("Início da história por:", f"{st.session_state.autor_selecionado}", value=st.session_state.historia_gerada, height=250, disabled=True)
+        st.divider()
+        st.write("Agora é a sua vez! Continue a história.")
+        nome_usuario = st.text_input("Seu nome:")
+        desfecho = st.text_area("Seu desfecho:", height=150)
+
+        if st.button("Enviar e ver história completa"):
+            if nome_usuario and desfecho:
+                with st.spinner("Enviando seu desfecho..."):
+                    worksheet = connect_to_gsheet()
+                    if worksheet:
+                        # MUDANÇA: Adicionamos o autor na linha a ser gravada
+                        nova_linha = [st.session_state.autor_selecionado, nome_usuario, st.session_state.historia_gerada, desfecho]
+                        worksheet.append_row(nova_linha)
+                        
+                        # MUDANÇA: Guardamos o desfecho e mudamos o estado para "concluído"
+                        st.session_state.desfecho_usuario = desfecho
+                        st.session_state.envio_concluido = True
+                        st.rerun() # Força o recarregamento para mostrar a nova tela
+            else:
+                st.warning("Por favor, preencha seu nome e o desfecho antes de enviar.")
+
+# MUDANÇA: Se o envio foi concluído, mostra a tela de sucesso com a história completa
+else:
+    st.success("Sua história foi enviada e salva com sucesso!")
+    st.header("Confira a história completa:")
+
+    # Junta as duas partes da história
+    historia_completa = f"{st.session_state.historia_gerada}\n\n{st.session_state.desfecho_usuario}"
+    
+    st.markdown(f"""
+    > _Início por **{st.session_state.autor_selecionado}**_
+    >
+    > {st.session_state.historia_gerada}
+    >
+    > _Seu desfecho:_
+    >
+    > **{st.session_state.desfecho_usuario}**
+    """)
+    
     st.divider()
-    st.write("Agora é a sua vez! Continue a história.")
-    nome_usuario = st.text_input("Seu nome:")
-    desfecho = st.text_area("Seu desfecho:", height=150)
 
-    if st.button("Enviar desfecho"):
-        if nome_usuario and desfecho:
-            with st.spinner("Enviando seu desfecho..."):
-                worksheet = connect_to_gsheet()
-                if worksheet:
-                    nova_linha = [nome_usuario, st.session_state.historia_gerada, desfecho]
-                    worksheet.append_row(nova_linha)
-                    st.success("Desfecho enviado!")
-                    st.session_state.historia_gerada = ""
-                    st.rerun()
-        else:
-            st.warning("Por favor, preencha seu nome e o desfecho antes de enviar.")
+    # MUDANÇA: Botão para resetar e escrever uma nova história
+    if st.button("Escrever outra história"):
+        # Limpa todas as variáveis de estado para recomeçar
+        st.session_state.historia_gerada = ""
+        st.session_state.autor_selecionado = ""
+        st.session_state.desfecho_usuario = ""
+        st.session_state.envio_concluido = False
+        st.rerun()
