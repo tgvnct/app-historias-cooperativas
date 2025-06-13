@@ -59,7 +59,7 @@ def gerar_historia(autor: str) -> str:
     return texto
 
 # --- INTERFACE STREAMLIT ------------------------------------------
-st.title("✍️ Histórias cooperativas")
+st.title("✍️ Histórias cooperativas, escreva junto com grandes nomes da literatura brasileira")
 
 # --- GERENCIAMENTO DE ESTADO DA SESSÃO ---
 # MUDANÇA: Adicionamos mais variáveis para controlar o fluxo
@@ -120,11 +120,11 @@ else:
     historia_completa = f"{st.session_state.historia_gerada}\n\n{st.session_state.desfecho_usuario}"
     
     st.markdown(f"""
-    > {st.session_state.historia_gerada}
-    >
-    > _Seu desfecho:_
-    >
-    > **{st.session_state.desfecho_usuario}**
+    {st.session_state.historia_gerada}
+    
+    *Seu desfecho:*
+    
+    **{st.session_state.desfecho_usuario}**
     """)
     
     st.divider()
