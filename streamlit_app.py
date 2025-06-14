@@ -82,7 +82,28 @@ if not st.session_state.envio_concluido:
                 st.session_state.historia_gerada = ""
 
     if st.session_state.historia_gerada:
-        st.text_area(label="", value=st.session_state.historia_gerada, height=250, disabled=True)
+          # Trecho de código atual a ser substituído
+    if st.session_state.historia_gerada:
+        # --- CÓDIGO NOVO PARA EXIBIR A HISTÓRIA ---
+        
+        # 1. Preparamos o texto da história para ser exibido em HTML, preservando os parágrafos.
+        historia_formatada_html = st.session_state.historia_gerada.replace('\n', '<br>')
+
+        # 2. Criamos a nossa caixa de texto customizada com fundo transparente e texto preto.
+        st.markdown(f"""
+        <div style="
+            background-color: transparent;
+            border: 1px solid #cccccc;
+            padding: 15px;
+            border-radius: 5px;
+            color: #000000;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+        ">
+            {historia_formatada_html}
+        </div>
+        """, unsafe_allow_html=True)
         st.divider()
         st.write("Agora é a sua vez! Continue a história.")
         nome_usuario = st.text_input("Seu nome:")
