@@ -42,9 +42,10 @@ else:
 
 def gerar_historia(autor: str) -> str:
     prompt = (
-        "Você é um autor brasileiro famoso chamado {autor}. "
-        "Escreva três parágrafos de uma história curta, inclua personagens criados por {autor}. "
-        "Apresente todo o texto em português brasileiro e não apresente nenhuma palavra em outro idioma, linguagem literária e termine com um gancho para o leitor concluir. "
+        "Gere um texto com o estilo do {autor} e seja fiel a esse estilo."
+        "Escreva três parágrafos de uma história curta, inclua personagens criados pelo autor {autor}."
+        "Apresente todo o texto em português brasileiro e não apresente nenhuma palavra em outro idioma, linguagem literária e termine com um gancho para o leitor concluir."
+        "Não adicione títulos nem numere os parágrafos."
     )
     rsp = co.chat(
         model="command-r", message=prompt, temperature=1.0, p=0.9, k=50,
