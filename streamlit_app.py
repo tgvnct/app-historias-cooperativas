@@ -16,6 +16,8 @@ AUTORES = [
     "Jorge Amado",
     "Rachel de Queiroz",
     "Lygia Fagundes Telles",
+    "Itamar Vieira Junior",
+    "Ariano Suassuna", 
 ]
 
 # --- FUNÇÕES (COHERE E GOOGLE SHEETS) ---
@@ -26,7 +28,7 @@ def connect_to_gsheet():
         creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
         client = gspread.authorize(creds)
         spreadsheet = client.open("Desfechos das Histórias") # CONFIRA O NOME DA PLANILHA
-        worksheet = spreadsheet.worksheet("Página1") # CONFIRA O NOME DA ABA
+        worksheet = spreadsheet.worksheet("Página1") # CONFIRA O NOME DA ABA, PODE SER TROCADO PARA SALVAR EM OUTRA ABA
         return worksheet
     except Exception as e:
         st.error(f"Erro ao conectar com o Google Sheets: {e}")
@@ -40,10 +42,11 @@ else:
 
 def gerar_historia(autor: str) -> str:
     prompt = (
-        f"Você é um autor brasileiro famoso chamado {autor}. "
-        f"Escreva três parágrafos de uma história curta, com personagens icônicos do estilo de {autor}. "
+        "Você é um autor brasileiro famoso chamado {autor}. "
+        "Escreva três parágrafos de uma história curta, inclua personagens criados por {autor}. "
         "Apresente todo o texto em português brasileiro e não apresente nenhuma palavra em outro idioma, linguagem literária e termine com um gancho para o leitor concluir. "
         "Não adicione títulos nem numere os parágrafos."
+        "O texto será completado por um estudante do ensino médio, adecue o estilo ao ensino médio."
     )
     rsp = co.chat(
         model="command-r", message=prompt, temperature=1.0, p=0.9, k=50,
@@ -55,7 +58,7 @@ def gerar_historia(autor: str) -> str:
     return texto
 
 # --- INTERFACE E LÓGICA PRINCIPAL ---
-st.title("✍️ Histórias cooperativas")
+st.title("✍️ Histórias cooperativas - escreva junto com grandes nomes da literatura brasileira")
 
 # Inicializa as variáveis de estado da sessão
 if 'historia_gerada' not in st.session_state:
