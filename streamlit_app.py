@@ -1,4 +1,4 @@
-# streamlit_app.py - VERSÃO FINAL DEFINITIVA
+# streamlit_app.py - VERSÃO FINAL COMPLETA - 14/06/2025
 
 import streamlit as st
 import cohere
@@ -7,15 +7,15 @@ import re
 import os
 import gspread
 from google.oauth2.service_account import Credentials
+from textwrap import dedent
 
-# --- CONSTANTES ---aqui podemos acrescentar ou modificar os autores
+# --- CONSTANTES ---
 AUTORES = [
     "Machado de Assis",
     "Guimarães Rosa",
     "Jorge Amado",
     "Rachel de Queiroz",
     "Lygia Fagundes Telles",
-    "Itamar Vieira Junior",    
 ]
 
 # --- FUNÇÕES (COHERE E GOOGLE SHEETS) ---
@@ -55,7 +55,7 @@ def gerar_historia(autor: str) -> str:
     return texto
 
 # --- INTERFACE E LÓGICA PRINCIPAL ---
-st.title("✍️ Histórias cooperativas - escreva junto com grandes autores brasileiros")
+st.title("✍️ Histórias cooperativas")
 
 # Inicializa as variáveis de estado da sessão
 if 'historia_gerada' not in st.session_state:
@@ -82,14 +82,8 @@ if not st.session_state.envio_concluido:
                 st.session_state.historia_gerada = ""
 
     if st.session_state.historia_gerada:
-          # Trecho de código atual a ser substituído
-    if st.session_state.historia_gerada:
-        # --- CÓDIGO NOVO PARA EXIBIR A HISTÓRIA ---
-        
-        # 1. Preparamos o texto da história para ser exibido em HTML, preservando os parágrafos.
+        # Bloco customizado para exibir a história com fundo transparente
         historia_formatada_html = st.session_state.historia_gerada.replace('\n', '<br>')
-
-        # 2. Criamos a nossa caixa de texto customizada com fundo transparente e texto preto.
         st.markdown(f"""
         <div style="
             background-color: transparent;
@@ -104,6 +98,7 @@ if not st.session_state.envio_concluido:
             {historia_formatada_html}
         </div>
         """, unsafe_allow_html=True)
+        
         st.divider()
         st.write("Agora é a sua vez! Continue a história.")
         nome_usuario = st.text_input("Seu nome:")
