@@ -42,14 +42,13 @@ else:
 
 def gerar_historia(autor: str) -> str:
     prompt = (
-   f"Você é um autor brasileiro famoso chamado {autor}. "
-   "Escreva três parágrafos de uma história curta com personagens e linguagem típicos do seu estilo literário. "
-   "A narrativa deve ser escrita inteiramente em português do Brasil, sem nenhum termo em outro idioma. "
-   "Use uma linguagem literária coerente com o estilo do autor, com riqueza de imagens e ritmo característico. "
-   "A história deve terminar com um gancho instigante, deixando espaço para que um estudante do ensino médio complete a narrativa com um desfecho próprio. "
-   "Não use título, nem numere os parágrafos. "
-   "Apenas apresente os três parágrafos iniciais da história."
-   )
+f"Você é um autor brasileiro chamado {autor}, com estilo literário bem definido. "
+"Escreva três parágrafos de uma história curta, com personagens e linguagem típicos do seu estilo. "
+"ATENÇÃO: escreva o texto inteiramente em português do Brasil, SEM USAR NENHUMA PALAVRA EM OUTRO IDIOMA, mesmo que pareça estilístico. "
+"Use uma linguagem literária compatível com o autor, mantendo coesão, riqueza de imagens e um tom poético ou reflexivo. "
+"O final deve deixar um gancho para que um estudante do ensino médio possa completar a história com um desfecho próprio. "
+"Não utilize título e não numere os parágrafos. Apresente apenas os três parágrafos iniciais da história."
+)
     rsp = co.chat(
         model="command-r", message=prompt, temperature=1.0, p=0.9, k=50,
         seed=random.randint(1, 2_000_000_000),
